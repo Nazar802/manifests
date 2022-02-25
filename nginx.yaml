@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: nginx-deployment
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+      tier: backend
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: nginx
+        tier: backend
+        track: stable
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        env:
+---
+apiVersion: v1
+
+kind: Service
+
+metadata:
+  name: nginx
+
+spec:
+  selector:
+    app: nginx
+    tier: backend
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
